@@ -1,0 +1,13 @@
+
+<launch>
+  
+ 
+<!--
+  <node name="fake_octomap" pkg="mobile_path_planning" type="fake_octomap" output="screen" />
+  <node name="action_client" pkg="mobile_path_planning" type="action_client" output="screen" />
+ -->
+  <node name="navigation_server" pkg="mobile_path_planning" type="navigation_server" output="screen" />
+  <node name="base_navigation_rb5" pkg="rb5_ros_wrapper" type="base_navigation_rb5" output="screen" />
+  
+</launch>
+

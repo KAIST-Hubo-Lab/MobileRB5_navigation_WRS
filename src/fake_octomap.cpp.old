@@ -1,0 +1,59 @@
+#include <ros/ros.h>
+
+#include <octomap/octomap.h>
+#include <octomap_msgs/Octomap.h>
+#include <sensor_msgs/PointCloud2.h>
+#include <octomap_msgs/conversions.h>
+
+/*
+ * Define an axis-aligned bounding box of obstacle and then update the map to represent the obstacle space
+ *
+ * _center: the center position of AABB
+ * _length: the length of AABB for each axis
+ * _octree: the map to represent the given AABB
+ */
+void update_obstacle(const octomap::point3d& _center, const octomap::point3d& _length, octomap::OcTree& _octree);
+
+int main(int argc, char** argv){
+    ros::init(argc, argv, "fake_octomap");
+    ros::NodeHandle nh;
+
+    // Publisher
+    ros::Publisher octomap_publisher = nh.advertise<octomap_msgs::Octomap>("mobile_hubo/fake_map", 1);
+
+    // Generate a fake octomap for test
+    const double RESOLUTION = 0.5;
+    octomap::OcTree octree(RESOLUTION);
+    update_obstacle(octomap::point3d(3.0, 2.0, 0.3), octomap::point3d(3.0, 1.5, 0.6), octree);
+    update_obstacle(octomap::point3d(5.0, 6.0, 1.0), octomap::point3d(2.0, 1.0, 2.0), octree);
+
+    ros::Rate rate(10);
+    while(nh.ok()){
+        // Publish the generated map
+        octomap_msgs::Octomap fake_map_msg;
+        fake_map_msg.header.frame_id = "map";
+        fake_map_msg.header.stamp = ros::Time::now();
+        octomap_msgs::binaryMapToMsg(octree, fake_map_msg);
+
+        octomap_publisher.publish(fake_map_msg);
+
+//        ros::spinOnce();
+
+        rate.sleep();
+    }
+
+    return 0;
+}
+
+void update_obstacle(const octomap::point3d& _center, const octomap::point3d& _length, octomap::OcTree& _octree)
+{
+    octomap::OcTreeKey minKey = _octree.coordToKey(_center - (_length * 0.5));
+    octomap::OcTreeKey maxKey = _octree.coordToKey(_center + (_length * 0.5));
+    for(uint16_t kx = minKey[0]; kx <= maxKey[0]; kx++){
+        for(uint16_t ky = minKey[1]; ky <= maxKey[1]; ky++){
+            for(uint16_t kz = minKey[2]; kz <= maxKey[2]; kz++){
+                _octree.updateNode(octomap::OcTreeKey(kx, ky, kz), true);
+            }
+        }
+    }
+}
