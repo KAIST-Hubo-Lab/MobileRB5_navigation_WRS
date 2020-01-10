@@ -30,7 +30,7 @@ void pc2_callback(const sensor_msgs::PointCloud2::ConstPtr &msg){
     for(int i = 0; i < cloud->size(); i++){
         // Add obstacles to octree
                 // update_obstacle(center point, length of each edge, octree)
-        if (cloud->at(i).z > 0.4)
+        //if (cloud->at(i).z > 0.4)
 			update_obstacle(octomap::point3d(cloud->at(i).x, cloud->at(i).y, cloud->at(i).z), octomap::point3d(RESOLUTION,RESOLUTION,RESOLUTION), octree);
     }
 

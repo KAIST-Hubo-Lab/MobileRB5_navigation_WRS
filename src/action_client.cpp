@@ -22,6 +22,7 @@ void set_goal_pose(const geometry_msgs::PoseStamped::ConstPtr& msg)
 		ROS_INFO("Client Requesting NEW GOAL!! goalX: %f, goalY: %f",msg->pose.position.x, msg->pose.position.y);
     
     received_goal = 1;
+    goal_navi.use_navi = 1;
      /* ============== Base Data Action  ==============  */
 	  goal_navi.use_marker = 1;
 	  goal_navi.pose_x = msg->pose.position.x;
@@ -61,6 +62,50 @@ int main (int argc, char **argv)
 
   ROS_INFO("Action server started, sending goal.");
   
+  
+  //============== Base Data Action  ==============  /
+	  ROS_INFO("Action 1 \n");
+	  goal_navi.use_marker = 0;
+	  goal_navi.use_navi = 1;
+	  goal_navi.pose_x = 1.5;
+	  goal_navi.pose_y = -0.5;
+	  
+	  goal_navi.ori_x = 0;
+	  goal_navi.ori_y = 0;
+	  goal_navi.ori_z = 0;
+	  goal_navi.ori_w = 1;
+	  
+	  ac_navi.sendGoalAndWait(goal_navi, ros::Duration(5));
+	  
+	//============== Base Data Action  ==============  /
+	  ROS_INFO("Action 2 \n");
+	  goal_navi.use_marker = 0;
+	  goal_navi.use_navi = 0;
+	  goal_navi.pose_x = 0;
+	  goal_navi.pose_y = 0;
+	  
+	  goal_navi.ori_x = 0;
+	  goal_navi.ori_y = 0;
+	  goal_navi.ori_z = 0.707;
+	  goal_navi.ori_w = 0.707;
+	  
+	  ac_navi.sendGoalAndWait(goal_navi, ros::Duration(5));  
+	  
+	// ============== Base Data Action  ==============  /
+	  ROS_INFO("Action 3 \n");
+	  goal_navi.use_marker = 1;
+	  goal_navi.use_navi = 0;
+	  goal_navi.pose_x = -0.3;
+	  goal_navi.pose_y = 0.0;
+	  
+	  goal_navi.ori_x = 0;
+	  goal_navi.ori_y = 0;
+	  goal_navi.ori_z = 0;
+	  goal_navi.ori_w = 1;  
+	  
+	  ac_navi.sendGoalAndWait(goal_navi, ros::Duration(5));
+	
+  /*
    ros::Rate rate(10);
    while(nh.ok())
    {
@@ -76,7 +121,7 @@ int main (int argc, char **argv)
         ros::spinOnce();
 		
 	}
-		  
+		  */
 
   //exit
   return 0;

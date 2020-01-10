@@ -1,5 +1,6 @@
 #goal definition
 int32 use_marker #0:false, 1:true
+int32 use_navi   #0:false, 1:true
 float64 pose_x
 float64 pose_y
 float64 pose_z

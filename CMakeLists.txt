@@ -26,6 +26,7 @@ find_package(octomap REQUIRED)
 find_package(PCL REQUIRED)
 
 
+
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
@@ -146,6 +147,8 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
+#=============
+
 add_executable(fake_octomap
     src/fake_octomap.cpp
 )
@@ -156,9 +159,9 @@ target_link_libraries(fake_octomap
 )
 
 #node for navigation action server
-add_executable(navigation_server 
-	src/navigation_server.cpp
-	src/path_planner.cpp
+add_executable(navigation_server
+        src/navigation_server.cpp
+        src/path_planner.cpp
     src/collision_checker.cpp
     src/quadmap/AbstractQuadTree.cpp
     src/quadmap/AbstractOccupancyQuadTree.cpp
@@ -171,9 +174,9 @@ add_executable(navigation_server
 )
 add_dependencies(navigation_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-target_link_libraries(navigation_server 
-	${catkin_LIBRARIES}
-	${OCTOMAP_LIBRARIES}
+target_link_libraries(navigation_server
+        ${catkin_LIBRARIES}
+        ${OCTOMAP_LIBRARIES}
 )
 
 # action client
@@ -202,6 +205,8 @@ target_link_libraries(mobile_path_planning
     ${catkin_LIBRARIES}
     ${OCTOMAP_LIBRARIES}
 )
+
+#============
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

@@ -106,14 +106,16 @@ public:
         ros::Rate r(10);
         r.sleep();
 
-        std::cout << std::endl << "navi_dummy CB" <<std::endl;
+        std::cout <<"use_marker: " << goal->use_marker << std::endl;
+        std::cout <<"use_navi: " << goal->use_navi << std::endl;
+
         
+        if(goal->use_navi == 1) {start_plan_flag = 1;}
+        else 					{start_plan_flag = 0;}
         //update flags 
-        start_plan_flag = 1;
         arrived_flag = 0;
 
-        //Print recieved msg
-        std::cout <<"use_marker: " << goal->use_marker << std::endl;
+
         goal_pose.position.x = goal->pose_x;
         goal_pose.position.y = goal->pose_y;
         goal_pose.position.z = goal->pose_z;
@@ -168,13 +170,13 @@ int main(int argc, char **argv)
 
 	// Subscribe the current pose, goal pose, and obstacles map
     ros::Subscriber start_pose_subscriber = n.subscribe("/tf", 1, set_start_pose);
-	ros::Subscriber arrival_subscriber = n.subscribe("/mobile_hubo/arrived_path", 10, update_arrived_flag);
+	ros::Subscriber arrival_subscriber = n.subscribe("/mobile_hubo/arrived_path", 1, update_arrived_flag);
     ros::Subscriber map_subscriber = n.subscribe("mobile_hubo/fake_map", 1, set_octomap);  // fake_octomap is used as collision map
     
 	naviAction navi_dummy("hubo_navigation");
 	ROS_INFO("Starting hubo_navigation module");
 
-	ros::Rate rate(10);
+	ros::Rate rate(100);
 	
     while(n.ok())
     {
